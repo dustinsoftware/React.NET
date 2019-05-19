@@ -182,6 +182,36 @@ namespace React
 			get { return _version.Value; }
 		}
 
+		///
+		public sealed class WebpackHelper
+		{
+			readonly IFileSystem _fileSystem;
+
+			///
+			public WebpackHelper(IFileSystem fileSystem)
+			{
+				_fileSystem = fileSystem;
+			}
+			///
+			public string ReadFile(string path)
+			{
+				if (path == null)
+				{
+					throw new ArgumentNullException("path");
+				}
+
+				// Hack
+				if (path.StartsWith("./wwwroot"))
+				{
+					path = path.Substring("./wwwroot".Length);
+				}
+
+				Console.WriteLine("Loading " + path);
+
+				return _fileSystem.ReadAsString(path);
+			}
+		}
+
 		/// <summary>
 		/// Ensures any user-provided scripts have been loaded. This only loads JSX files; files
 		/// that need no transformation are loaded in JavaScriptEngineFactory.
@@ -192,6 +222,11 @@ namespace React
 			if (Engine.HasVariable(USER_SCRIPTS_LOADED_KEY) || _config == null)
 			{
 				return;
+			}
+
+			if (_config.InitializeDelayedComponents)
+			{
+				Engine.EmbedHostObject("WebpackHelper", new WebpackHelper(_fileSystem));
 			}
 
 			foreach (var file in _config.Scripts)
@@ -218,6 +253,20 @@ namespace React
 					), ex);
 				}
 			}
+
+			if (_config.InitializeDelayedComponents)
+			{
+				try
+				{
+					Engine.Execute("DelayedLoader.init()");
+					Engine.Execute("Loadable.preloadAll()");
+				}
+				catch (JsScriptException ex)
+				{
+					throw new ReactScriptLoadException(ex.Message);
+				}
+			}
+
 			Engine.SetVariableValue(USER_SCRIPTS_LOADED_KEY, true);
 		}
 

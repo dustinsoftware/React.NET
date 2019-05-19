@@ -7,6 +7,8 @@
     "build": "webpack"
   },
   "dependencies": {
+    "@loadable/component": "^5.10.1",
+    "@loadable/server": "^5.9.0",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
     "react": "^16.8.2",
@@ -24,6 +26,8 @@
     "@babel/plugin-proposal-object-rest-spread": "7.4.4",
     "@babel/preset-env": "7.4.4",
     "@babel/preset-react": "7.0.0",
+    "@loadable/babel-plugin": "^5.10.0",
+    "@loadable/webpack-plugin": "^5.7.1",
     "babel-loader": "8.0.5",
     "babel-runtime": "6.26.0",
     "webpack": "4.31.0",

@@ -19,7 +19,7 @@ const BlueTitle = styled('h1')`
 	}
 `;
 
-export function EmotionDemo() {
+export default function EmotionDemo() {
 	return (
 		<Fragment>
 			<Helmet>

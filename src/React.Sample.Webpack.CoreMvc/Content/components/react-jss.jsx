@@ -28,7 +28,7 @@ const DemoTitle = ({ classes, children }) => (
 
 const WithInjectedSheet = injectSheet(styles)(DemoTitle);
 
-export class ReactJssDemo extends React.Component {
+export default class ReactJssDemo extends React.Component {
 	componentDidMount() {
 		const serverStyles = document.getElementById('server-side-styles');
 		if (serverStyles) {

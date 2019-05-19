@@ -8,11 +8,12 @@ import {
 	Redirect,
 } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-
+import Loadable from '@loadable/component';
 import { CommentsBox } from './comments/Sample.jsx';
-import { StyledComponentsDemo } from './styled-components.jsx';
-import { EmotionDemo } from './emotion.jsx';
-import { ReactJssDemo } from './react-jss.jsx';
+
+const StyledComponentsDemo = Loadable(() => import('./styled-components.jsx'));
+const EmotionDemo = Loadable(() => import('./emotion.jsx'));
+const ReactJssDemo = Loadable(() => import('./react-jss.jsx'));
 
 class Navbar extends Component {
 	render() {

@@ -95,11 +95,13 @@ namespace React.Router
 		/// <returns>JavaScript</returns>
 		public override void RenderJavaScript(TextWriter writer)
 		{
+			writer.Write("var preloadPromise = typeof Loadable !== 'undefined' ? Loadable.preloadReady() : Promise.resolve();");
+			writer.Write("preloadPromise.then(() => (");
 			writer.Write("ReactDOM.hydrate(");
 			base.WriteComponentInitialiser(writer);
 			writer.Write(", document.getElementById(\"");
 			writer.Write(ContainerId);
-			writer.Write("\"))");
+			writer.Write("\"))))");
 		}
 	}
 }

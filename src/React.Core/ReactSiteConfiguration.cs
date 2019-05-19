@@ -44,7 +44,7 @@ namespace React
 			};
 			UseDebugReact = false;
 			UseServerSideRendering = true;
-			ExceptionHandler = (Exception ex, string ComponentName, string ContainerId) => 
+			ExceptionHandler = (Exception ex, string ComponentName, string ContainerId) =>
 				throw new ReactServerRenderingException(string.Format(
 					"Error while rendering \"{0}\" to \"{2}\": {1}",
 					ComponentName,
@@ -357,6 +357,16 @@ namespace React
 		public IReactSiteConfiguration SetScriptNonceProvider(Func<string> provider)
 		{
 			ScriptNonceProvider = provider;
+			return this;
+		}
+
+		///
+		public bool InitializeDelayedComponents { get; set; }
+
+		///
+		public IReactSiteConfiguration SetInitializeDelayedComponents(bool value)
+		{
+			InitializeDelayedComponents = value;
 			return this;
 		}
 	}

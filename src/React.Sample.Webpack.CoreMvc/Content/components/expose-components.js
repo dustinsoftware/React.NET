@@ -1,20 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
-
-import RootComponent from './home.jsx';
-import { ServerStyleSheet } from 'styled-components';
-import { JssProvider, SheetsRegistry } from 'react-jss';
-import { renderStylesToString } from 'emotion-server';
 import Helmet from 'react-helmet';
+import { loadableReady } from '@loadable/component';
+import RootComponent from './home.jsx';
+import { init } from './delayed-loader';
 
 global.React = React;
 global.ReactDOM = ReactDOM;
 global.ReactDOMServer = ReactDOMServer;
 
-global.Styled = { ServerStyleSheet };
-global.ReactJss = { JssProvider, SheetsRegistry };
-global.EmotionServer = { renderStylesToString };
 global.Helmet = Helmet;
+global.loadableReady = loadableReady;
 
 global.RootComponent = RootComponent;
+global.DelayedLoader = { init };

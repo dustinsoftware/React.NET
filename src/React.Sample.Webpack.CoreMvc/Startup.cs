@@ -50,8 +50,10 @@ namespace React.Sample.Webpack.CoreMvc
 					.SetLoadBabel(true)
 					.SetLoadReact(false)
 					.SetBabelVersion(BabelVersions.Babel7)
+					.SetInitializeDelayedComponents(true)
 					.AddScriptWithoutTransform("~/dist/runtime.js")
 					.AddScriptWithoutTransform("~/dist/vendor.js")
+					.AddScriptWithoutTransform("~/server/server-polyfill.js")
 					.AddScriptWithoutTransform("~/dist/components.js");
 			});
 
