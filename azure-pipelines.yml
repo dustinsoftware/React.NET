@@ -7,7 +7,7 @@ pool:
 variables:
     buildPlatform: 'Any CPU'
     buildConfiguration: 'Release'
-    buildType: 'Release'
+    buildType: 'Debug'
 
 steps:
     - task: NodeTool@0
