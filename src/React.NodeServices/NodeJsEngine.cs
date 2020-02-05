@@ -1,23 +1,21 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Jering.Javascript.NodeJS;
 using Newtonsoft.Json;
-using React;
 
 namespace React.NodeServices
 {
 	public class NodeJsEngine : INodeJsEngine, IDisposable
 	{
-		private Dictionary<string, bool> _dict = new Dictionary<string, bool>();
-		private object _lock = new object();
+		private object _lock;
 		private readonly INodeJSService _nodeJSService;
 		private static readonly JsonSerializerSettings _settings = new JsonSerializerSettings { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii };
 
 		private NodeJsEngine(INodeJSService nodeJSService)
 		{
 			_nodeJSService = nodeJSService;
+			_lock = new object();
 		}
 
 		private string WrapAsModule(string code) => $@"
@@ -76,18 +74,12 @@ module.exports = function(callback, ...args) {{
 
 		public bool HasVariable(string key)
 		{
-			lock(_lock)
-			{
-				return _dict.ContainsKey(key);
-			}
+			return Evaluate<bool>($"typeof {key} !== 'undefined'");
 		}
 
 		public void SetVariableValue(string key, bool value)
 		{
-			lock(_lock)
-			{
-				_dict[key] = value;
-			}
+			Execute($"this.{key} = {value.ToString().ToLowerInvariant()}");
 		}
 	}
 }
