@@ -10,10 +10,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using JavaScriptEngineSwitcher.Core;
 using JSPool;
+using Newtonsoft.Json;
 using React.Exceptions;
 using React.TinyIoC;
 
@@ -67,6 +67,13 @@ namespace React
 		/// Version number of ReactJS.NET
 		/// </summary>
 		protected readonly Lazy<string> _version = new Lazy<string>(GetVersion);
+
+		/// <summary>
+		/// The parsed webpack app manifest. This is intentionally only cached once per request to aid with the local development experience.
+		/// In the future, it could be cached more actively using a filesystem watcher to invalidate when the file is updated.
+		/// </summary>
+		protected readonly Lazy<ReactAppAssetManifest> _appManifest;
+
 		/// <summary>
 		/// Contains an engine acquired from a pool of engines. Only used if
 		/// <see cref="IReactSiteConfiguration.ReuseJavaScriptEngines"/> is enabled.
@@ -143,6 +150,7 @@ namespace React
 				new Babel(this, _cache, _fileSystem, _fileCacheHash, _config)
 			);
 			_engineFromPool = new Lazy<PooledJsEngine>(() => _engineFactory.GetEngine());
+			_appManifest = new Lazy<ReactAppAssetManifest>(LoadAppManifest);
 		}
 
 		/// <summary>
@@ -346,6 +354,46 @@ namespace React
 					writer.WriteLine(';');
 				}
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="writer"></param>
+		public virtual void GetScriptTags(TextWriter writer)
+		{
+			foreach (var file in _appManifest.Value.Entrypoints)
+			{
+				if (file.EndsWith(".js"))
+				{
+					writer.WriteLine($"<script src=\"{_config.ReactAppBuildPath.Replace("~/", "/")}/{file}\"></script>");
+				}
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="writer"></param>
+		public virtual void GetStyleTags(TextWriter writer)
+		{
+			foreach (var file in _appManifest.Value.Entrypoints)
+			{
+				if (file.EndsWith(".css"))
+				{
+					writer.WriteLine($"<link rel=\"stylesheet\" href=\"{_config.ReactAppBuildPath.Replace("~/", "/")}/{file}\"></style>");
+
+				}
+			}
+		}
+
+		private ReactAppAssetManifest LoadAppManifest()
+		{
+			if (string.IsNullOrEmpty(_config.ReactAppBuildPath))
+			{
+				throw new ReactException($"{nameof(_config.ReactAppBuildPath)} must be set before calling {nameof(LoadAppManifest)}");
+			}
+			return JsonConvert.DeserializeObject<ReactAppAssetManifest>(_fileSystem.ReadAsString($"{_config.ReactAppBuildPath}/asset-manifest.json"));
 		}
 
 		/// <summary>

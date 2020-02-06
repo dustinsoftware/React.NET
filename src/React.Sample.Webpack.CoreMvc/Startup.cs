@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using React.AspNet;
-using React.NodeServices;
 
 namespace React.Sample.Webpack.CoreMvc
 {
@@ -41,14 +40,14 @@ namespace React.Sample.Webpack.CoreMvc
 		public void Configure(IApplicationBuilder app)
 		{
 			// Initialise ReactJS.NET. Must be before static files.
-			app.UseReactWithEnvironment<ReactWithNodeEnvironment>(config =>
+			app.UseReact(config =>
 			{
 				config
 					.SetReuseJavaScriptEngines(true)
 					.SetLoadBabel(false)
 					.SetLoadReact(false)
-					.SetNodeJsEngine(() => NodeJsEngine.CreateEngine(app.ApplicationServices.GetService<INodeJSService>()))
-					.AddScriptWithoutTransform("~/server/dist/components.js");
+					// .SetNodeJsEngine(() => NodeJsEngine.CreateEngine(app.ApplicationServices.GetService<INodeJSService>()))
+					.SetReactAppBuildPath("~/build");
 			});
 
 			app.UseStaticFiles();

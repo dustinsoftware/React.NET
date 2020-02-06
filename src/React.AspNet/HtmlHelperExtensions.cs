@@ -169,6 +169,32 @@ namespace React.AspNet
 			}
 		}
 
+		/// <summary>
+		/// Writes script tags based on the webpack asset manifest
+		/// </summary>
+		/// <param name="htmlHelper"></param>
+		/// <returns></returns>
+		public static IHtmlString ReactGetScriptTags(this IHtmlHelper htmlHelper)
+		{
+			return RenderToString(writer =>
+			{
+				Environment.GetScriptTags(writer);
+			});
+		}
+
+		/// <summary>
+		/// Writes style tags based on the webpack asset manifest
+		/// </summary>
+		/// <param name="htmlHelper"></param>
+		/// <returns></returns>
+		public static IHtmlString ReactGetStyleTags(this IHtmlHelper htmlHelper)
+		{
+			return RenderToString(writer =>
+			{
+				Environment.GetStyleTags(writer);
+			});
+		}
+
 		private static IHtmlString RenderToString(Action<StringWriter> withWriter)
 		{
 			var stringWriter = _sharedStringWriter;

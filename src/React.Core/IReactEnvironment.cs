@@ -123,5 +123,17 @@ namespace React
 		/// <param name="clientOnly">True if server-side rendering will be bypassed. Defaults to false.</param>
 		/// <returns>JavaScript for all components</returns>
 		void GetInitJavaScript(TextWriter writer, bool clientOnly = false);
+
+		/// <summary>
+		/// Writes a list of script tags from the webpack app manifest
+		/// </summary>
+		/// <param name="writer"></param>
+		void GetScriptTags(TextWriter writer);
+
+		/// <summary>
+		/// Writes a list of style tags from the webpack app manifest
+		/// </summary>
+		/// <param name="writer"></param>
+		void GetStyleTags(TextWriter writer);
 	}
 }

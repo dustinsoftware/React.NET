@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using React.Exceptions;
 using React.TinyIoC;
@@ -130,10 +129,6 @@ namespace React.NodeServices
 			);
 			_lazyEngine = new Lazy<INodeJsEngine>(() => 
 			{
-				var allFiles = _config.Scripts
-					.Concat(_config.ScriptsWithoutTransform)
-					.Select(_fileSystem.MapPath);
-
 				var nodeInstance = _config.CreateNodeJsInstance();
 
 				if (_config.LoadReact)
@@ -440,6 +435,16 @@ namespace React.NodeServices
 
 				engine.ExecuteResource(resourceName, assembly);
 			}
+		}
+
+		public void GetScriptTags(TextWriter writer)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void GetStyleTags(TextWriter writer)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

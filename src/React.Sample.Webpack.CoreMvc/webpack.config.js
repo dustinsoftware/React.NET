@@ -1,8 +1,9 @@
 const path = require('path');
+const ManifestPlugin = require('webpack-manifest-plugin');
 
 const bundle = {
 	entry: {
-		components: './Content/components/expose-components.js',
+		main: ['./Content/components/expose-components.js'],
 	},
 	devtool: 'sourcemap',
 	output: {
@@ -35,6 +36,26 @@ const bundle = {
 			},
 		],
 	},
+	plugins: [
+		new ManifestPlugin({
+			fileName: 'asset-manifest.json',
+			publicPath: 'dist/',
+			generate: (seed, files, entrypoints) => {
+			  const manifestFiles = files.reduce((manifest, file) => {
+				manifest[file.name] = file.path;
+				return manifest;
+			  }, seed);
+			  const entrypointFiles = entrypoints.main.filter(
+				fileName => !fileName.endsWith('.map')
+			  );
+	
+			  return {
+				files: manifestFiles,
+				entrypoints: entrypointFiles,
+			  };
+			},
+		  }),
+	]
 };
 
 module.exports = [
