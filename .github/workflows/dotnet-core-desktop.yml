@@ -41,7 +41,6 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
-    - name: Nuget pack
     - name: Upload build artifacts
       uses: actions/upload-artifact@v1
       with:
